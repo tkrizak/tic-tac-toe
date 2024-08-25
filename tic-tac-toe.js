@@ -1,8 +1,26 @@
+const displayController = (() => {
+  const renderResult = (result) => {
+    document.querySelector('#result').innerHTML = result;
+  };
+
+  const displayPlayers = (player1, player2) => {
+    document.querySelector('#player1').innerHTML = `<p>Player 1</p>
+    <p>${player1.name}</p>
+    <p>${player1.mark}</p>`;
+
+    document.querySelector('#player2').innerHTML = `<p>Player 2</p>
+    <p>${player2.name}</p>
+    <p>${player2.mark}</p>`;
+  };
+
+  return { renderResult, displayPlayers };
+})();
+
 const Gameboard = (() => {
   let gameboard = ['', '', '', '', '', '', '', '', ''];
 
   const render = () => {
-    const squares = document.querySelectorAll('.square');
+    const squares = document.querySelectorAll('.game__square');
     squares.forEach((square, index) => {
       square.textContent = gameboard[index];
 
@@ -22,7 +40,7 @@ const Gameboard = (() => {
   return { render, update, getGameboard };
 })();
 
-// Creates a player object
+// Player factory function
 
 const createPlayer = (name, mark) => {
   return {
@@ -42,9 +60,11 @@ const Game = (() => {
 
   const start = () => {
     players = [
-      createPlayer(document.querySelector('#player1').value, 'X'),
-      createPlayer(document.querySelector('#player2').value, 'O'),
+      createPlayer(document.querySelector('#player1-input').value, 'X'),
+      createPlayer(document.querySelector('#player2-input').value, 'O'),
     ];
+
+    displayController.displayPlayers(players[0], players[1]);
 
     currentPlayerIndex = 0;
     gameOver = false;
@@ -66,11 +86,17 @@ const Game = (() => {
       Gameboard.render();
     }
     currentPlayerIndex = 0;
+    gameOver = false;
+    document.querySelector('#result').innerHTML = '';
   };
 
   // Finds clicked square, updates gameboard array with correct mark and rotates between player turns
 
   const handleClick = (event) => {
+    if (gameOver) {
+      return;
+    }
+
     let index = parseInt(event.target.id.split('-')[1]);
 
     if (Gameboard.getGameboard()[index] !== '') {
@@ -83,7 +109,12 @@ const Game = (() => {
       checkForWin(Gameboard.getGameboard(), players[currentPlayerIndex].mark)
     ) {
       gameOver = true;
-      alert(`${players[currentPlayerIndex].name} won!`);
+      displayController.renderResult(
+        `${players[currentPlayerIndex].name} wins`
+      );
+    } else if (checkForTie(Gameboard.getGameboard())) {
+      gameOver = true;
+      displayController.renderResult(`It's a tie`);
     }
 
     currentPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
@@ -107,7 +138,7 @@ function checkForWin(board) {
     [2, 4, 6],
   ];
 
-  // Loops through winning arrays, asigns their index, checks if board values on those indexes are same
+  // Loops through winning arrays, asigns their index, checks if board values on those indexes are same mark
   for (let i = 0; i < winningCombinations.length; i++) {
     const [a, b, c] = winningCombinations[i];
 
@@ -116,6 +147,14 @@ function checkForWin(board) {
     }
   }
   return false;
+}
+
+// Function that returns true if every cell in board array is not empty
+
+function checkForTie(board) {
+  return board.every((cell) => {
+    return cell !== '';
+  });
 }
 
 //

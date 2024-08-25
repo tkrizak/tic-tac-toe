@@ -8,32 +8,39 @@
   </head>
   <body>
     <header class="header">
-      <div class="container">
+      <div class="header__container container">
         <h1 class="title">Tic Tac Toe</h1>
       </div>
     </header>
     <main>
-      <div class="gameboard__container container">
-        <div class="gameboard" id="gameboard">
-          <div class="square" id="square-0"></div>
-          <div class="square" id="square-1"></div>
-          <div class="square" id="square-2"></div>
-          <div class="square" id="square-3"></div>
-          <div class="square" id="square-4"></div>
-          <div class="square" id="square-5"></div>
-          <div class="square" id="square-6"></div>
-          <div class="square" id="square-7"></div>
-          <div class="square" id="square-8"></div>
+      <section class="game">
+        <div class="game__container container">
+          <div class="game__board">
+            <div class="game__player" id="player1"></div>
+            <div class="game__grid" id="gameboard">
+              <div class="game__square" id="square-0"></div>
+              <div class="game__square" id="square-1"></div>
+              <div class="game__square" id="square-2"></div>
+              <div class="game__square" id="square-3"></div>
+              <div class="game__square" id="square-4"></div>
+              <div class="game__square" id="square-5"></div>
+              <div class="game__square" id="square-6"></div>
+              <div class="game__square" id="square-7"></div>
+              <div class="game__square" id="square-8"></div>
+            </div>
+            <div class="game__player" id="player2"></div>
+          </div>
+          <div class="game__controls">
+            <div class="game__controls__content">
+              <input type="text" id="player1-input" placeholder="Play 1 Name" />
+              <input type="text" id="player2-input" placeholder="Play 2 Name" />
+              <button id="start-button">Start Game</button>
+              <button id="restart-button">Restart Game</button>
+            </div>
+          </div>
+          <div class="game__result" id="result"></div>
         </div>
-        <div class="controls">
-          <input type="text" id="player1" placeholder="Play 1 Name" />
-          <input type="text" id="player2" placeholder="Play 2 Name" />
-          <button id="start-button">Start Game</button>
-          <button id="restart-button">Restart Game</button>
-        </div>
-        <div id="message"></div>
-        <div id="result-display"></div>
-      </div>
+      </section>
     </main>
     <script src="tic-tac-toe.js"></script>
   </body>
