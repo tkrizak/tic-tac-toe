@@ -1,19 +1,31 @@
 const displayController = (() => {
   const renderResult = (result) => {
     document.querySelector('#result').innerHTML = result;
+    document.querySelector('#result').classList.add('visible');
   };
 
   const displayPlayers = (player1, player2) => {
-    document.querySelector('#player1').innerHTML = `<p>Player 1</p>
+    const player1Element = document.querySelector('#player1');
+    const player2Element = document.querySelector('#player2');
+
+    player1Element.innerHTML = `<p>Player 1</p>
     <p>${player1.name}</p>
     <p>${player1.mark}</p>`;
 
-    document.querySelector('#player2').innerHTML = `<p>Player 2</p>
+    player2Element.innerHTML = `<p>Player 2</p>
     <p>${player2.name}</p>
     <p>${player2.mark}</p>`;
+
+    player1Element.classList.add('has-players');
+    player2Element.classList.add('has-players');
   };
 
-  return { renderResult, displayPlayers };
+  const displayTurn = (playerTurn) => {
+    document.querySelector('#result').innerHTML = playerTurn;
+    document.querySelector('#result').classList.add('visible');
+  };
+
+  return { renderResult, displayPlayers, displayTurn };
 })();
 
 const Gameboard = (() => {
@@ -54,26 +66,52 @@ const createPlayer = (name, mark) => {
 const Game = (() => {
   let players = [];
   let currentPlayerIndex;
-  let gameOver;
+  let gameOver = false;
+  let gameInProgress = false;
 
   // Creates 2 players on game start, updates squares correctly with handleClick function
 
   const start = () => {
-    players = [
-      createPlayer(document.querySelector('#player1-input').value, 'X'),
-      createPlayer(document.querySelector('#player2-input').value, 'O'),
-    ];
+    if (gameInProgress) {
+      alert('Please restart the game before starting a new one!');
+      return;
+    }
+
+    const player1Input = document.querySelector('#player1-input');
+    const player2Input = document.querySelector('#player2-input');
+
+    const player1Name = player1Input.value;
+    const player2Name = player2Input.value;
+
+    // Prevents the game from starting
+    if (!player1Name || !player2Name) {
+      alert('Both player names must be filled out to start the game');
+      return;
+    }
+
+    // Creates players and displays them
+    players = [createPlayer(player1Name, 'X'), createPlayer(player2Name, 'O')];
 
     displayController.displayPlayers(players[0], players[1]);
 
+    // Sets player index 0 on start for update function to rotate between players
     currentPlayerIndex = 0;
     gameOver = false;
+    gameInProgress = true;
     Gameboard.render();
+
+    displayController.displayTurn(
+      `${players[currentPlayerIndex].name} place your mark`
+    );
 
     const squares = document.querySelectorAll('.square');
     squares.forEach((square) => {
       square.addEventListener('click', handleClick);
     });
+
+    // Empties inputs on start
+    player1Input.value = '';
+    player2Input.value = '';
 
     console.log(players);
   };
@@ -85,9 +123,22 @@ const Game = (() => {
       Gameboard.update(i, '');
       Gameboard.render();
     }
-    currentPlayerIndex = 0;
+
+    players = [];
+    currentPlayerIndex = undefined;
     gameOver = false;
-    document.querySelector('#result').innerHTML = '';
+    gameInProgress = false;
+
+    document.querySelector('#result').textContent = '';
+    document.querySelector('#player1').textContent = '';
+    document.querySelector('#player2').textContent = '';
+
+    document.querySelector('#result').classList.remove('visible');
+
+    document.querySelector('#player1').classList.remove('has-players');
+    document.querySelector('#player2').classList.remove('has-players');
+
+    console.log(players);
   };
 
   // Finds clicked square, updates gameboard array with correct mark and rotates between player turns
@@ -115,9 +166,12 @@ const Game = (() => {
     } else if (checkForTie(Gameboard.getGameboard())) {
       gameOver = true;
       displayController.renderResult(`It's a tie`);
+    } else {
+      currentPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
+      displayController.displayTurn(
+        `${players[currentPlayerIndex].name} place your mark`
+      );
     }
-
-    currentPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
   };
 
   return { start, restart, handleClick };
