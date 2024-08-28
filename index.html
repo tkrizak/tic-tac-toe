@@ -5,20 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tic Tac Toe</title>
     <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://kit.fontawesome.com/7ff2ea44f7.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <header class="header">
       <div class="header__container container">
         <h1 class="title">Tic Tac Toe</h1>
-        <div class="game__result" id="result"></div>
+        <p class="game__result" id="result"></p>
       </div>
     </header>
     <main>
       <section class="game">
         <div class="game__container container">
-          <div class="game__board">
+          <div class="game__board" id="gameBoard">
             <div class="game__player" id="player1"></div>
-            <div class="game__grid" id="gameboard">
+            <div class="game__grid" id="gameGrid">
               <div class="game__square" id="square-0"></div>
               <div class="game__square" id="square-1"></div>
               <div class="game__square" id="square-2"></div>
@@ -38,19 +42,19 @@
                   type="text"
                   id="player1-input"
                   placeholder="Player 1 Name"
+                  maxlength="14"
                 />
                 <input
                   type="text"
                   id="player2-input"
                   placeholder="Player 2 Name"
+                  maxlength="14"
                 />
               </div>
               <div class="game__controls__buttons">
-                <button class="start-button" id="start-button">
-                  Start Game
-                </button>
+                <button class="start-button" id="start-button">Start</button>
                 <button class="restart-button" id="restart-button">
-                  Restart Game
+                  Restart
                 </button>
               </div>
             </div>
@@ -58,6 +62,15 @@
         </div>
       </section>
     </main>
+    <footer class="footer container">
+      <p>
+        Copyright © 2024
+        <a href="https://github.com/tkrizak">Tomáš Križák</a>
+      </p>
+      <a href="https://github.com/tkrizak/tic-tac-toe"
+        ><i class="fa-brands fa-github fa-xl" aria-hidden="true"></i
+      ></a>
+    </footer>
     <script src="tic-tac-toe.js"></script>
   </body>
 </html>

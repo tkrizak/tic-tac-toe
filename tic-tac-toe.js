@@ -18,6 +18,8 @@ const displayController = (() => {
 
     player1Element.classList.add('has-players');
     player2Element.classList.add('has-players');
+    document.querySelector('#gameBoard').style.gap =
+      'clamp(2.5rem, 2rem + 2.5vw, 5rem)';
   };
 
   const displayTurn = (playerTurn) => {
@@ -134,6 +136,9 @@ const Game = (() => {
     document.querySelector('#player2').textContent = '';
 
     document.querySelector('#result').classList.remove('visible');
+    document.querySelector('#result').style.textDecoration = 'none';
+
+    document.querySelector('#gameBoard').style.gap = '0';
 
     document.querySelector('#player1').classList.remove('has-players');
     document.querySelector('#player2').classList.remove('has-players');
@@ -161,8 +166,9 @@ const Game = (() => {
     ) {
       gameOver = true;
       displayController.renderResult(
-        `${players[currentPlayerIndex].name} wins`
+        `${players[currentPlayerIndex].name} wins!`
       );
+      document.querySelector('#result').style.textDecoration = 'underline';
     } else if (checkForTie(Gameboard.getGameboard())) {
       gameOver = true;
       displayController.renderResult(`It's a tie`);
